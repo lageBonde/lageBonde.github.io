@@ -1,10 +1,226 @@
-<h1>J*vla TID!</h1>
+<!DOCTYPE html>
+<html>
+<style>
+    /* to fill in */
+    body {
+        background: #90c0de;
+        overflow: hidden;
+    }
 
-<h2>the second best website known to man</h2>
+    svg {/*
+        positions:fixed;
+        top: 50%;
+        bottom: 50%;
+        transform: translate(25%, 25%);*/
+        display:block;
+        margin: 0 auto;
+        margin-top:2vh;
+    }
+    h1 {
+        width: 100%;
+        text-align: center;
+    }
+</style>
+<body>
+    <!--<p id="ms"></p>
+    <p id="s"></p>
+    <p id="min"></p>
+    <p id="h"></p>-->
 
-<center style="font-style:italic;">ARVID SWISHA 106 SPÄNN OCH 38 ÖRE (inkluderat 1 öre ränta)!!!</center>
+    <svg id="klocka" width="600" height="600" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="300" cy="310" r="210" style="stroke:rgba(6,110,176, 0.3);stroke-width:100;fill:rgba(0,0,0,0);" />
+        
+        <line id="svg_ms" x1="300" y1="310" x2=250 y2=0 style="stroke:#000;stroke-width:2" />
 
-<foot style="
-  position: fixed;
-  bottom:0px;
-  ">&copy; Arvid and Lage 2026</foot>
+        <circle id="svg_s" cx="250" cy="260" r=30
+style="stroke:#666;stroke-width:0;fill:rgba(6,110,176, 0.3);" />
+
+        <!--<line id="svg_h" x1="250" y1="260" x2=250 y2=0 style="stroke:#000;stroke-width:13" />-->
+        
+        
+        <polygon points="0,0 0,100 100,100" id="svg_h_appendage2" style="fill:rgba(6,110,176, 1);stroke:black;stroke:#90c0de;stroke-width:3" />
+        <circle id="svg_h_appendage1" cx="250" cy="260" r="20" style="stroke-width:0;fill:rgba(6,110,176, 1);" />
+        <polygon points="0,0 0,100 100,100" id="svg_h_appendage3" style="fill:rgba(6,110,176, 1);stroke-width:0;" />
+
+        <!--<line id="svg_min" x1="250" y1="260" x2=250 y2=0 style="stroke:#eee;stroke-width:10" />-->
+        <polygon points="0,0 0,100 100,100" id="svg_min" style="fill:rgba(6,110,176, 1);stroke:#90c0de;stroke-width:3" />
+
+        <circle cx="300" cy="310" r="20" style="fill:hsl(203, 93%, 36%);stroke:#90c0de;stroke-width:5;" />
+        <!--<circle cx="250" cy="260" r="15" style="fill:hsl(203, 93%, 32%);stroke-width:0;" />
+    --></svg>
+    
+    
+    <script>
+        const cx = 300;
+        const cy = 310;
+        const r = 200;
+        // Klocka siffror
+        svg = document.getElementById("klocka");
+        // h
+        for (let i=1; i <= 12; i++) {
+            let number = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            number.appendChild(
+                document.createTextNode(i.toString())
+            );
+            number.setAttribute("x",
+                cx-36+(r+20)*Math.cos(2*Math.PI/12*i - Math.PI/2)
+            );
+            number.setAttribute("y",
+                cy-25+(r+20)*Math.sin(2*Math.PI/12*i - Math.PI/2)
+            );
+            number.setAttribute("dx",30);
+            number.setAttribute("dy",30);
+            number.setAttribute("style"," \
+                fill: black; \
+                font-weight: 1000; \
+                font-size: 30; \
+                font-family: Arial, serif; \
+                text-align: center; \
+                background-color: brown; \
+            ");
+            svg.appendChild(number);
+        }
+    
+        const offset = 2;
+
+        svg_ms = document.getElementById("svg_ms");
+        svg_s = document.getElementById("svg_s");
+        svg_min = document.getElementById("svg_min");
+        svg_h = document.getElementById("svg_h");
+        
+        function updateScript() {
+            let time = Date.now();
+            time = (time % (1000*60*60*24)) + (offset*60*60*1000);
+            
+            ms = time % 1000;
+            s = parseInt(
+                (time % (1000*60))/1000
+            );
+            min = parseInt(
+                (time % (1000*60*60))/(1000*60)
+            );
+            h = (time)/(1000*60*60);
+
+            // To delete
+            /*document.getElementById("ms").innerHTML = ms.toString();
+            document.getElementById("s").innerHTML = s.toString();
+            document.getElementById("min").innerHTML = min.toString();
+            document.getElementById("h").innerHTML = h.toString();
+            */
+            
+            // ms
+            svg_ms.setAttribute("x2", cx+r*Math.cos(
+                (2*Math.PI/1000) * ms - Math.PI/2
+            ));
+            svg_ms.setAttribute("y2", cy+r*Math.sin(
+                (2*Math.PI/1000) * ms - Math.PI/2
+            ));
+
+            // s
+            svg_s.setAttribute("cx", cx+(r+17)*Math.cos(
+                (2*Math.PI/60) * s - Math.PI/2
+            ));
+            svg_s.setAttribute("cy", cy+(r+17)*Math.sin(
+                (2*Math.PI/60) * s - Math.PI/2
+            ));
+
+            // min
+            /*svg_min.setAttribute("x2", cx+r*Math.cos(
+                (2*Math.PI/60) * min - Math.PI/2
+            ));
+            svg_min.setAttribute("y2", cy+r*Math.sin(
+                (2*Math.PI/60) * min - Math.PI/2
+            ));*/
+
+            i_hat = r*Math.cos(
+                (2*Math.PI/60) * min - Math.PI/2
+            )
+
+            j_hat = r*Math.sin(
+                (2*Math.PI/60) * min - Math.PI/2
+            )
+
+            svg_min.setAttribute("points", 
+                (// Right corner
+                parseInt(cx+ - 0.04*j_hat).toString() + 
+                "," + 
+                parseInt(cy+ + 0.04*i_hat).toString() + " " +
+
+                // Left corner
+                parseInt(cx+ + 0.04*j_hat).toString() + 
+                "," + 
+                parseInt(cy+ - 0.04*i_hat).toString() + " " +
+                
+                // Tip
+                parseInt(cx+0.95*i_hat).toString() + 
+                "," + 
+                parseInt(cy+0.95*j_hat).toString()
+            ).toString());
+
+            // h
+            /*svg_h.setAttribute("x2", cx+0.4*r*Math.cos(
+                (2*Math.PI/12) * (h % 12) - Math.PI/2
+            ));
+            svg_h.setAttribute("y2", cy+0.4*r*Math.sin(
+                (2*Math.PI/12) * (h % 12) - Math.PI/2
+            ));*/
+
+            svg_h_appendage1.setAttribute("cx", cx+0.4*r*Math.cos(
+                (2*Math.PI/12) * (h % 12) - Math.PI/2
+            ));
+            svg_h_appendage1.setAttribute("cy", cy+0.4*r*Math.sin(
+                (2*Math.PI/12) * (h % 12) - Math.PI/2
+            ));
+
+            k = 0.108
+            
+            i_hat = r*Math.cos(
+                (2*Math.PI/12) * (h % 12) - Math.PI/2
+            );
+            j_hat = r*Math.sin(
+                (2*Math.PI/12) * (h % 12) - Math.PI/2
+            );
+
+            svg_h_appendage2.setAttribute("points", 
+                (// Right corner
+                parseInt(cx+(0.4)*i_hat - k*j_hat).toString() + 
+                "," + 
+                parseInt(cy+(0.4)*j_hat + k*i_hat).toString() + " " +
+
+                // Left corner
+                parseInt(cx+(0.4)*i_hat + k*j_hat).toString() + 
+                "," + 
+                parseInt(cy+(0.4)*j_hat - k*i_hat).toString() + " " +
+                
+                // Tip
+                parseInt(cx+0.8*i_hat).toString() + 
+                "," + 
+                parseInt(cy+0.8*j_hat).toString()
+            ).toString());
+
+            k = 0.05;
+
+            svg_h_appendage3.setAttribute("points", 
+                (// Right corner
+                parseInt(cx+(0)*i_hat - k*j_hat).toString() + 
+                "," + 
+                parseInt(cy+(0)*j_hat + k*i_hat).toString() + " " +
+
+                // Left corner
+                parseInt(cx+(0)*i_hat + k*j_hat).toString() + 
+                "," + 
+                parseInt(cy+(0)*j_hat - k*i_hat).toString() + " " +
+                
+                // Tip
+                parseInt(cx+0.5*i_hat).toString() + 
+                "," + 
+                parseInt(cy+0.5*j_hat).toString()
+            ).toString());
+
+            
+        }
+        setInterval(updateScript, 1);
+        updateScript();
+    </script>
+</body>
+</html>
